@@ -4,32 +4,28 @@ const url = require("url");
 const { getDate } = require("./modules/utils");
 const { greeting } = require("./lang/en/en");
 
-const PORT = process.env.PORT || 3000;
+class Server {
+  constructor(port) {
+    this.port = port || 3000;
+    this.server = http.createServer(this.requestHandler.bind(this));
+  }
 
-const server = http.createServer((req, res) => {
-  const parsedUrl = url.parse(req.url, true);
-  const pathname = parsedUrl.pathname;
-  const name = parsedUrl.query.name;
+  requestHandler(req, res) {
+    const parsedUrl = url.parse(req.url, true);
+    const name = parsedUrl.query.name;
 
-  if (pathname === "/COMP4537/labs/3/getDate/" && req.method === "GET") {
     res.writeHead(200, { "Content-Type": "text/html" });
 
-    if (name) {
-      const currentDate = getDate();
-      const messageText = greeting(name, currentDate);
+    const message = name
+      ? greeting(name, getDate())
+      : "Please provide your name using ?name=YourName";
 
-      res.end(`<p style="color:blue;">${messageText}</p>`);
-    } else {
-      res.end(
-        `<p style="color:blue;">Please provide your name using ?name=YourName</p>`,
-      );
-    }
-  } else {
-    res.writeHead(404, { "Content-Type": "text/plain" });
-    res.end("404 Not Found");
+    res.end(`<p style="color:blue;">${message}</p>`);
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+const app = new Server(process.env.PORT);
+
+app.server.listen(app.port, () => {
+  console.log(`Server running on port ${app.port}`);
 });
