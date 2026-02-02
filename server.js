@@ -23,15 +23,21 @@ class Server {
       const text = parsedUrl.query.text;
       fs.appendFileSync(this.filePath, text + "\n");
       res.end(`<p style="color:blue;">"${text}" was appended to file.txt</p>`);
-    } else if (pathname.includes("getDate")) {
-      const name = parsedUrl.query.name;
-      const message = name ? greeting(name, getDate()) : "Please provide your name using ?name=YourName";
-      res.end(`<p style="color:blue;">${message}</p>`);
-    }
-
+    } 
+    
     if (pathname.includes("readFile")) {
-      const content = fs.existsSync(this.filePath) ? fs.readFileSync(this.filePath, "utf8") : "";
+      const content = fs.existsSync(this.filePath)
+        ? fs.readFileSync(this.filePath, "utf8")
+        : "";
       res.end(`<p style="color:blue;">${content}</p>`);
+    } 
+    
+    if (pathname.includes("getDate")) {
+      const name = parsedUrl.query.name;
+      const message = name
+        ? greeting(name, getDate())
+        : "Please provide your name using ?name=YourName";
+      res.end(`<p style="color:blue;">${message}</p>`);
     }
   }
 }
