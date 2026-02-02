@@ -17,26 +17,27 @@ class Server {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    res.writeHead(200, { "Content-Type": "text/html" });
-
     if (pathname.includes("writeFile")) {
       const text = parsedUrl.query.text;
       fs.appendFileSync(this.filePath, text + "\n");
-      res.end(`<p style="color:blue;">"${text}" was appended to file.txt</p>`);
-    } 
-    
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end(text + " was appended to file.txt");
+    }
+
     if (pathname.includes("readFile")) {
       const content = fs.existsSync(this.filePath)
         ? fs.readFileSync(this.filePath, "utf8")
         : "";
-      res.end(`<p style="color:blue;">${content}</p>`);
-    } 
-    
+      res.writeHead(200, { "Content-Type": "text/plain" });
+      res.end(content);
+    }
+
     if (pathname.includes("getDate")) {
       const name = parsedUrl.query.name;
       const message = name
         ? greeting(name, getDate())
         : "Please provide your name using ?name=YourName";
+      res.writeHead(200, { "Content-Type": "text/html" });
       res.end(`<p style="color:blue;">${message}</p>`);
     }
   }
