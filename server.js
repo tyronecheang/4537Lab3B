@@ -7,8 +7,8 @@ const { getDate } = require("./modules/utils");
 const { greeting } = require("./lang/en/en");
 
 class Server {
-  constructor(port) {
-    this.port = port || 3000;
+  constructor() {
+    this.port = process.env.PORT || 3000;
     this.filePath = path.join(__dirname, "file.txt");
     this.server = http.createServer(this.requestHandler.bind(this));
   }
@@ -43,7 +43,7 @@ class Server {
   }
 }
 
-const app = new Server(3000);
+const app = new Server();
 app.server.listen(app.port, () => {
   console.log(`Server running on port ${app.port}`);
 });
