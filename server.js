@@ -35,7 +35,7 @@ class Server {
     if (pathname.includes("getDate")) {
       const name = parsedUrl.query.name;
       const message = name
-        ? lang.greeting.replace("%1", name) + " " + new Date().toString()
+        ? lang.greeting.replace("%1", name) + " " + getDate()
         : lang.nameRequired;
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(`<p style="color:blue;">${message}</p>`);
