@@ -22,14 +22,23 @@ class Server {
       fs.appendFileSync(this.filePath, text + "\n");
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end(text + " " + lang.appended);
+      return;
     }
 
     if (pathname.includes("/COMP4537/labs/3/readFile")) {
-      const content = fs.existsSync(this.filePath)
-        ? fs.readFileSync(this.filePath, "utf8")
-        : "";
+      const fileName = pathname.split("/").pop();
+      const requestedPath = path.join(__dirname, fileName);
+
+      if (!fs.existsSync(requestedPath)) {
+        res.writeHead(404, { "Content-Type": "text/plain" });
+        res.end(lang.fileNotFound.replace("%1", fileName));
+        return;
+      }
+
+      const content = fs.readFileSync(requestedPath, "utf8");
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end(content);
+      return;
     }
 
     if (pathname.includes("/COMP4537/labs/3/getDate")) {
@@ -39,7 +48,8 @@ class Server {
         : lang.nameRequired;
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(`<p style="color:blue;">${message}</p>`);
-    }
+      return;
+    } 
   }
 }
 
