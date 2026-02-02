@@ -17,14 +17,14 @@ class Server {
     const parsedUrl = url.parse(req.url, true);
     const pathname = parsedUrl.pathname;
 
-    if (pathname.includes("writeFile")) {
+    if (pathname.includes("/COMP4537/labs/3/writeFile")) {
       const text = parsedUrl.query.text;
       fs.appendFileSync(this.filePath, text + "\n");
       res.writeHead(200, { "Content-Type": "text/plain" });
       res.end(text + " " + lang.appended);
     }
 
-    if (pathname.includes("readFile")) {
+    if (pathname.includes("/COMP4537/labs/3/readFile")) {
       const content = fs.existsSync(this.filePath)
         ? fs.readFileSync(this.filePath, "utf8")
         : "";
@@ -32,7 +32,7 @@ class Server {
       res.end(content);
     }
 
-    if (pathname.includes("getDate")) {
+    if (pathname.includes("/COMP4537/labs/3/getDate")) {
       const name = parsedUrl.query.name;
       const message = name
         ? lang.greeting.replace("%1", name) + " " + getDate()
