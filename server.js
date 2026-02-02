@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { getDate } = require("./modules/utils");
-const { greeting } = require("./lang/en/en");
+const lang = require("./lang/en/en");
 
 class Server {
   constructor() {
@@ -21,7 +21,7 @@ class Server {
       const text = parsedUrl.query.text;
       fs.appendFileSync(this.filePath, text + "\n");
       res.writeHead(200, { "Content-Type": "text/plain" });
-      res.end(text + " was appended to file.txt");
+      res.end(text + " " + lang.appended);
     }
 
     if (pathname.includes("readFile")) {
@@ -35,8 +35,8 @@ class Server {
     if (pathname.includes("getDate")) {
       const name = parsedUrl.query.name;
       const message = name
-        ? greeting(name, getDate())
-        : "Please provide your name using ?name=YourName";
+        ? lang.greeting.replace("%1", name) + " " + new Date().toString()
+        : lang.nameRequired;
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(`<p style="color:blue;">${message}</p>`);
     }
